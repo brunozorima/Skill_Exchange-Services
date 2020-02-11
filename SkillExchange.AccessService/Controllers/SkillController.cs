@@ -1,0 +1,125 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SkillExchange.AccessService.Domain.SkillDomain;
+using SkillExchange.AccessService.Models;
+using SkillExchange.AccessService.Services.SkillService;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace SkillExchange.AccessService.Controllers
+{
+    //controller name  = access
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SkillController : ControllerBase
+    {
+        private readonly ISkillService _skillService;
+        private readonly IPerson_Has_Need_Skill_Service _person_Has_Need_Skill_Service;
+
+        public SkillController(ISkillService skillService, IPerson_Has_Need_Skill_Service person_Has_Need_Skill_Service)
+        {
+            this._skillService = skillService;
+            this._person_Has_Need_Skill_Service = person_Has_Need_Skill_Service;
+        }
+
+        [HttpPost]
+        [Route("/api/[controller]/skill")]
+        public async Task<IActionResult> AddSkill([FromBody] SkillModel skillToAdd, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.AddSkillAsync(skillToAdd, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(new SkillFailedResult
+                {
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result.SkillSuccessResponse);
+        }
+
+        [HttpGet]
+        [Route("/api/[controller]/skills")]
+        public async Task<IEnumerable<SkillModel>> GetSkillModelsAsync(CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.GetAllSkillsAsync(cancellationToken);
+            return result;
+        }
+
+        [HttpDelete]
+        [Route("/api/[controller]/{id}")]
+        public async Task<IActionResult> DeleteSkill(int id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.DeleteSkillAsync(id, cancellationToken);
+            if (result.Success)
+            {
+                return BadRequest(new SkillFailedResult
+                {
+                    Errors = result.Errors
+                });
+            }
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("/api/[controller]/{id}")]
+        public async Task<IActionResult> GetSkillByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.GetSkillByIdAsync(id, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(new SkillFailedResult
+                {
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result.SkillSuccessResponse);
+        }
+
+        [HttpGet]
+        [Route("/api/[controller]/category/{category_id}")]
+        public async Task<IEnumerable<SkillModel>> GetSkillByCategoryAsync(int category_id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.GetSkillByCategoryAsync(category_id, cancellationToken);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("/api/[controller]/findByName={name}")]
+        public async Task<IEnumerable<SkillModel>> FindSkillsByName(string name, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.FindSkillsByName(name, cancellationToken);
+            return result;
+        }
+        //People has skill api
+        [HttpGet]
+        [Route("/api/[controller]/PersonHas/{Person_Id}")]
+        public async Task<IEnumerable<SkillModel>> GetPersonHasSkillById(int Person_Id, CancellationToken cancellationToken)
+        {
+            var result = await this._person_Has_Need_Skill_Service.GetPersonHasSkillById(Person_Id, cancellationToken);
+            return result;
+        }
+
+        [HttpPost]
+        [Route("/api/[controller]/PersonHas/person={person_Id}/skill={Skill_Id}")]
+        public async Task<IActionResult> AddPersonHasSkillById(int Person_Id, int Skill_Id, CancellationToken cancellationToken)
+        {
+            var result = await this._person_Has_Need_Skill_Service.AddPersonHasSkillById(Person_Id, Skill_Id, cancellationToken);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new SkillFailedResult
+                {
+                    Errors = result.Errors
+                });
+            }
+            var b = new SkillModel
+            {
+                Category = 0,
+                Id = 0,
+                Name = "Test"
+            };
+            return Ok(b);
+        }
+    }
+}

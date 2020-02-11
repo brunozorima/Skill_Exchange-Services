@@ -15,4 +15,8 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\SkillService\People_Has_Need_SkillService\" />
+  </ItemGroup>
+
 </Project>

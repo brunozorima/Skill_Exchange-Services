@@ -16,5 +16,8 @@ namespace SkillExchange.AccessService.Repository
         public Task<SkillModel> AddSkill(SkillModel skillModel, CancellationToken cancellationToken);
         public Task<IdentityResult> DeleteSkill(int id, CancellationToken cancellationToken);
         public Task<IEnumerable<SkillModel>> FindSkillByName(string name, CancellationToken cancellationToken);
+        public Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillId(int skill_id, CancellationToken cancellationToken);
+        public Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsBySkillId(int skill_id, CancellationToken cancellationToken);
+
     }
 }

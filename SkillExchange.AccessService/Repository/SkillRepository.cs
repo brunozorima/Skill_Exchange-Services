@@ -87,5 +87,45 @@ namespace SkillExchange.AccessService.Repository
                 return result.ToList();
             }
         }
+        /// <summary>
+        /// /this returns a list of people who wants to gain this spefic skills set
+        /// </summary>
+        /// <param name="skill_id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillId(int skill_id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<ApplicationUser>($@"
+                    SELECT [U].[Id], [U].[FirstName], [U].[LastName], [U].[Email]
+                    FROM [ApplicationUser] [U]    
+                    JOIN [Person_Need_Skill] [PNS] ON [U].Id = [PNS].[Person_Id]
+                    WHERE [PNS].[Skill_Id] = @{nameof(skill_id)}", new { skill_id });
+                return result.ToList();
+            }
+        }
+        /// <summary>
+        /// Returns a list of people who owns this specific skills set
+        /// </summary>
+        /// <param name="skill_id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsBySkillId(int skill_id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<ApplicationUser>($@"
+                    SELECT [U].[Id], [U].[FirstName], [U].[LastName], [U].[Email]
+                    FROM [ApplicationUser] [U]    
+                    JOIN [Person_Has_Skill] [PHS] ON [U].Id = [PHS].[Person_Id]
+                    WHERE [PHS].[Skill_Id] = @{nameof(skill_id)}", new { skill_id });
+                return result.ToList();
+            }
+        }
     }
 }

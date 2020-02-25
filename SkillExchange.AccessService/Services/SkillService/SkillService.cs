@@ -90,9 +90,21 @@ namespace SkillExchange.AccessService.Services.SkillService
             };
         }
 
-        public async Task<IEnumerable<SkillModel>> FindSkillsByName(string name, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SkillModel>> FindSkillsByNameAsync(string name, CancellationToken cancellationToken)
         {
             var result = await this._skillRepository.FindSkillByName(name, cancellationToken);
+            return result;
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillIdAsync(int skill_id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillRepository.GetWantedPersonBySkillId(skill_id, cancellationToken);
+            return result;
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsSkillIdAsync(int skill_id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillRepository.GetPersonOwningSkillsBySkillId(skill_id, cancellationToken);
             return result;
         }
     }

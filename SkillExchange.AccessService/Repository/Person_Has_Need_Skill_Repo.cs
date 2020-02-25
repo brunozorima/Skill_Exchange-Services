@@ -17,29 +17,47 @@ namespace SkillExchange.AccessService.Repository
         {
             this._dbConnectionProvider = dbConnectionProvider;
         }
-        public async Task<IdentityResult> Add_Person_Has_Skills_By_Id_Async(int Person_Id, int Skill_Id, CancellationToken cancellationToken)
+        public async Task<int> Add_Person_Has_Skills_By_Id_Async(int Person_Id, int Skill_Id, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
                 await connection.OpenAsync(cancellationToken);
-                await connection.QuerySingleAsync<int>($@"INSERT INTO [Person_Has_Skill] ([Person_Id], [Skill_Id])
+                return await connection.QuerySingleOrDefaultAsync<int>($@"INSERT INTO [Person_Has_Skill] ([Person_Id], [Skill_Id])
                 VALUES (@{nameof(Person_Id)}, @{nameof(Skill_Id)})", new { Person_Id, Skill_Id });
-            }
-            return IdentityResult.Success;
+            }            
         }
-
-        public async Task<IdentityResult> Add_Person_Need_Skills_By_Id_Async(int Person_Id, int Skill_Id, CancellationToken cancellationToken)
+        //need skill 
+        public async Task<int> Add_Person_Need_Skills_By_Id_Async(int Person_Id, int Skill_Id, CancellationToken cancellationToken)
         {
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
                 await connection.OpenAsync(cancellationToken);
-                await connection.QuerySingleAsync<int>($@"INSERT INTO [Person_Need_Skill] ([Person_Id], [Skill_Id])
+                return await connection.QuerySingleOrDefaultAsync<int>($@"INSERT INTO [Person_Need_Skill] ([Person_Id], [Skill_Id])
                 VALUES (@{nameof(Person_Id)}, @{nameof(Skill_Id)})", new { Person_Id, Skill_Id });
+            }            
+        }
+        public async Task<IdentityResult> Delete_Person_Has_Skills_By_Id_Async(int Person_Id, int Skill_Id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                await connection.ExecuteAsync($"DELETE FROM [Person_Has_Skill] WHERE [Person_Id] = @{nameof(Person_Id)} AND [Skill_Id] = @{nameof(Skill_Id)}", new { Person_Id, Skill_Id });
             }
             return IdentityResult.Success;
         }
-
+        //Need skill implementation
+        public async Task<IdentityResult> Delete_Person_Need_Skills_By_Id_Async(int Person_Id, int Skill_Id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                await connection.ExecuteAsync($"DELETE FROM [Person_Need_Skill] WHERE [Person_Id] = @{nameof(Person_Id)} AND [Skill_Id] = @{nameof(Skill_Id)}", new { Person_Id, Skill_Id });
+            }
+            return IdentityResult.Success;
+        }
         public async Task<IEnumerable<SkillModel>> Get_Person_Has_Skills_By_Id_Async(int Person_Id, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -54,6 +72,7 @@ namespace SkillExchange.AccessService.Repository
             }
         }
 
+        //need skill 
         public async Task<IEnumerable<SkillModel>> Get_Person_Need_Skills_By_Id_Async(int Person_Id, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

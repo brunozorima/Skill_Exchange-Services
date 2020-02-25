@@ -16,6 +16,8 @@ namespace SkillExchange.AccessService.Services.SkillService
         public Task<SkillResult> GetSkillByIdAsync(int id, CancellationToken cancellationToken);
         public Task<IEnumerable<SkillModel>> GetSkillByCategoryAsync(int category_id, CancellationToken cancellationToken);
         public Task<SkillResult> DeleteSkillAsync(int id, CancellationToken cancellationToken);
-        public Task<IEnumerable<SkillModel>> FindSkillsByName(string name, CancellationToken cancellationToken);
+        public Task<IEnumerable<SkillModel>> FindSkillsByNameAsync(string name, CancellationToken cancellationToken);
+        public Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillIdAsync(int skill_id, CancellationToken cancellationToken);
+        public Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsSkillIdAsync(int skill_id, CancellationToken cancellationToken);
     }
 }

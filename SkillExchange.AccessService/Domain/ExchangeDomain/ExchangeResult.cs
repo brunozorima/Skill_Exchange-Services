@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SkillExchange.AccessService.Domain
+namespace SkillExchange.AccessService.Domain.ExchangeDomain
 {
-    public class AuthenticationResult
+    public class ExchangeResult
     {
         public bool Success { get; set; }
         public IEnumerable<string> Errors { get; set; }
-        public AuthSuccessResponse authSuccessResponse { get; set; }
-        public IEnumerable<ApplicationUser> requestedUser { get; set; }
-
+        public ExchangeResultModel exchangeResultResponse { get; set; }
+        public int Returned_Id { get; set; }
     }
 }

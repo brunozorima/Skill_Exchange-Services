@@ -1,4 +1,5 @@
-﻿using SkillExchange.AccessService.Models;
+﻿using SkillExchange.AccessService.Domain.ExchangeDomain;
+using SkillExchange.AccessService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
 {
     public interface IExchangeRepository
     {
-        public Task<ExchangeRequest> AddExchangeRequest(ExchangeRequest exchangeRequest, CancellationToken cancellationToken);
-        public Task<ExchangeMessage> AddExchangeMessage(ExchangeMessage exchangeMessage, CancellationToken cancellationToken);
+        public Task<int> RequestExchange(ExchangeRequest exchangeRequest, CancellationToken cancellationToken);
+        public Task<int> SendExchangeMessage(ExchangeMessage exchangeMessage, CancellationToken cancellationToken);
+        public Task<IEnumerable<ApplicationUser>> GetRequestList(int recipient_id, int status, CancellationToken cancellationToken);
 
     }
 }

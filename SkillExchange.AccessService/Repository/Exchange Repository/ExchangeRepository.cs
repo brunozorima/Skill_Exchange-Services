@@ -22,12 +22,19 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
             cancellationToken.ThrowIfCancellationRequested();
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
+                //add a new message to the list (ExchangeMessage Table) and update the last message time on exchange table.
                 await connection.OpenAsync(cancellationToken);
-                exchangeMessage.Id =  await connection.QuerySingleOrDefaultAsync<int>($@"INSERT INTO [ExchangeMessage] ([Sender_Id],[Recipient_Id],[Body], [TimeStamp])
+                exchangeMessage.Id =  await connection.QuerySingleOrDefaultAsync<int>
+                ($@"INSERT INTO [ExchangeMessage] ([Sender_Id],[Exchange_Id],[Body], [TimeStamp])
                 VALUES (@{nameof(exchangeMessage.Sender_Id)},
-                    @{nameof(exchangeMessage.Recipient_Id)}, 
+                    @{nameof(exchangeMessage.Exchange_Id)}, 
                     @{nameof(exchangeMessage.MessageBody)},
-                    @{nameof(exchangeMessage.TimeStamp)}); SELECT CAST(SCOPE_IDENTITY() as int)", exchangeMessage);
+                    @{nameof(exchangeMessage.TimeStamp)}); 
+                            
+                    UPDATE [Exchange]
+                    SET [Last_Message_TimeStamp] = @{nameof(exchangeMessage.TimeStamp)}
+                    WHERE [Id] = @{nameof(exchangeMessage.Exchange_Id)}
+                    SELECT CAST(SCOPE_IDENTITY() as int)", exchangeMessage);
             }
             return exchangeMessage.Id;
         }
@@ -64,6 +71,19 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
                 return result.ToList();
             }
         }
-
+        public async Task<IEnumerable<ExchangeResultModel>> GetExchangeMessage(int recipient_id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<ExchangeResultModel>($@"
+                    SELECT [U].[Id], [U].[FirstName], [U].[LastName], [U].[Email], [EM].[Body], [EM].[TimeStamp]
+                    FROM [ApplicationUser] [U]    
+                    JOIN [ExchangeMessage] [EM] ON [U].Id = [EM].[Sender_Id]
+                    WHERE [EM].[Recipient_Id] = @{nameof(recipient_id)}", new { recipient_id });
+                return result.ToList();
+            }
+        }
     }
 }

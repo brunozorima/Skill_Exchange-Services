@@ -67,5 +67,22 @@ namespace SkillExchange.AccessService.Controllers
             }
             return Ok(result.requestedUser);
         }
+
+        [HttpGet]
+        [Route("/api/[controller]/{recipient_id}/message/")]
+        public async Task<IActionResult> GetExchangeMessageAsync(int recipient_id, CancellationToken cancellationToken)
+        {
+            var result = await this._exchangeService.GetExchangeMessageAsync(recipient_id, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(new ExchangeFailedResult
+                {
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result.exchangeResultResponse);
+        }
+
+        
     }
 }

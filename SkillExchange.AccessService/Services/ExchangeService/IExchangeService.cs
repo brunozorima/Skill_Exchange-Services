@@ -13,6 +13,8 @@ namespace SkillExchange.AccessService.Services.ExchangeService
     {
         public Task<ExchangeResult> RequestExchangeAsync(ExchangeRequest exchangeRequest, CancellationToken cancellationToken);
         public Task<ExchangeResult> SendExchangeMessageAsync(ExchangeMessage exchangeMessage, CancellationToken cancellationToken);
-        public Task<AuthenticationResult> GetRequestListAsync(int recipient_id, int status, CancellationToken cancellationToken);
+        public Task<AuthenticationResult> GetRequestListAsync(int recipient_id, int status, CancellationToken cancellationToken);        
+        public Task<ExchangeResult> GetExchangeMessageAsync(int recipient_id, CancellationToken cancellationToken);
+
     }
 }

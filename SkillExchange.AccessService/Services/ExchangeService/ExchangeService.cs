@@ -71,7 +71,22 @@ namespace SkillExchange.AccessService.Services.ExchangeService
                 Errors = new[] { "No Exchange Requests Avaliable!" }
             };
         }
+        public async Task<ExchangeResult> GetExchangeMessageAsync(int recipient_id, CancellationToken cancellationToken)
+        {
+            var listOfMessages = await this._exchangeRepository.GetExchangeMessage(recipient_id, cancellationToken);
+            if (listOfMessages != null)
+            {
+                return new ExchangeResult
+                {
+                    Success = true,
+                    exchangeResultResponse = listOfMessages
+                };
 
-
+            }
+            return new ExchangeResult
+            {
+                Errors = new[] { "Unable To Retrieve Messages" }
+            };
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace SkillExchange.AccessService.Models
         public int Id { get; set; }
         public int Sender_Id { get; set; }
         public int Exchange_Id { get; set; }
-        public string MessageBody { get; set; }
+        public string Body { get; set; }
         public DateTime TimeStamp { get; set; }
     }
 }

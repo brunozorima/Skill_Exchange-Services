@@ -5684,6 +5684,7 @@
       "Swashbuckle.AspNetCore >= 4.0.1",
       "Swashbuckle.AspNetCore.Swagger >= 4.0.1",
       "Swashbuckle.AspNetCore.SwaggerUi >= 4.0.1",
+      "System.Collections.NonGeneric >= 4.3.0",
       "System.Data.SqlClient >= 4.7.0"
     ]
   },
@@ -5755,6 +5756,10 @@
           "Swashbuckle.AspNetCore.SwaggerUi": {
             "target": "Package",
             "version": "[4.0.1, )"
+          },
+          "System.Collections.NonGeneric": {
+            "target": "Package",
+            "version": "[4.3.0, )"
           },
           "System.Data.SqlClient": {
             "target": "Package",

@@ -28,7 +28,7 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
                 ($@"INSERT INTO [ExchangeMessage] ([Sender_Id],[Exchange_Id],[Body], [TimeStamp])
                 VALUES (@{nameof(exchangeMessage.Sender_Id)},
                     @{nameof(exchangeMessage.Exchange_Id)}, 
-                    @{nameof(exchangeMessage.MessageBody)},
+                    @{nameof(exchangeMessage.Body)},
                     @{nameof(exchangeMessage.TimeStamp)}); 
                             
                     UPDATE [Exchange]
@@ -56,34 +56,66 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
             return exchangeRequest.Id;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetRequestList(int recipient_id, int status, CancellationToken cancellationToken)
+        //return all messages in a specific exchange
+        public async Task<IEnumerable<ExchangeMessage>> GetAllMessagesInOneExchange(int loggedInUserId, int exchange_id, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
                 await connection.OpenAsync(cancellationToken);
-                var result = await connection.QueryAsync<ApplicationUser>($@"
-                    SELECT [U].[Id], [U].[FirstName], [U].[LastName], [U].[Email]
+                var result = await connection.QueryAsync<ExchangeMessage>($@"
+                    SELECT DISTINCT [EM].[ID], [EM].[Sender_Id], [EM].[Exchange_Id], [EM].[Body], [EM].[TimeStamp]
+                    FROM [ExchangeMessage] [EM]
+                    JOIN [Exchange] [E] ON 
+                    [E].[Recipient_Id] = @{nameof(loggedInUserId)} OR [E].[Sender_Id] = @{nameof(loggedInUserId)} 
+                    where [EM].[Exchange_Id] = @{nameof(exchange_id)}", new { exchange_id, loggedInUserId });              
+                return result.ToList();
+            }
+        }
+
+        //return all requests sent to this user
+        public async Task<IEnumerable<ExchangeResponseModel>> RequestSentTo(int sender_id, CancellationToken cancellationToken, int status)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<ExchangeResponseModel>($@"
+                    SELECT [U].[Id] as User_Id, [U].[FirstName], [U].[LastName], [U].[Email], [E].Id as Exchange_Id, [E].Status, [E].Opened_TimeStamp
+                    FROM [ApplicationUser] [U]    
+                    JOIN [Exchange] [E] ON [U].Id = [E].[Recipient_Id]
+                    WHERE [E].[Sender_Id] = @{nameof(sender_id)}
+                    AND [E].[Status] =  @{nameof(status)}", new { sender_id, status });
+                return result.ToList();
+            }
+        }
+        //return the list of uusers who I recieved requests for skill exchanges from
+        public async Task<IEnumerable<ExchangeResponseModel>> RequestRecievedFrom(int recipient_id, CancellationToken cancellationToken, int status)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<ExchangeResponseModel>($@"
+                    SELECT [U].[Id] as User_Id, [U].[FirstName], [U].[LastName], [U].[Email], [E].Id as Exchange_Id, [E].Status, [E].Opened_TimeStamp
                     FROM [ApplicationUser] [U]    
                     JOIN [Exchange] [E] ON [U].Id = [E].[Sender_Id]
                     WHERE [E].[Recipient_Id] = @{nameof(recipient_id)}
-                    AND [E].[Status] = @{nameof(status)}", new { recipient_id, status });
+                    AND [E].[Status] =  @{nameof(status)}", new { recipient_id, status });
                 return result.ToList();
             }
         }
-        public async Task<IEnumerable<ExchangeResultModel>> GetExchangeMessage(int recipient_id, CancellationToken cancellationToken)
+        public async Task<ExchangeRequest> GetExchangeRequestById(int request_id, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
                 await connection.OpenAsync(cancellationToken);
-                var result = await connection.QueryAsync<ExchangeResultModel>($@"
-                    SELECT [U].[Id], [U].[FirstName], [U].[LastName], [U].[Email], [EM].[Body], [EM].[TimeStamp]
-                    FROM [ApplicationUser] [U]    
-                    JOIN [ExchangeMessage] [EM] ON [U].Id = [EM].[Sender_Id]
-                    WHERE [EM].[Recipient_Id] = @{nameof(recipient_id)}", new { recipient_id });
-                return result.ToList();
+                return await connection.QuerySingleOrDefaultAsync<ExchangeRequest>($@"
+                SELECT [Id], [Sender_Id], [Recipient_Id], [Status], [Opened_TimeStamp], [Last_Message_TimeStamp] 
+                FROM [Exchange] WHERE [Id] = @{nameof(request_id)}", new { request_id });
             }
         }
+
     }
 }

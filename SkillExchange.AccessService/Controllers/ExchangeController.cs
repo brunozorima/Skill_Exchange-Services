@@ -54,10 +54,10 @@ namespace SkillExchange.AccessService.Controllers
         }
 
         [HttpGet]
-        [Route("/api/[controller]/{recipient_id}/request/{status}")]
-        public async Task<IActionResult> GetRequestExchange(int recipient_id, int status, CancellationToken cancellationToken)
+        [Route("/api/[controller]/{exchange_id}/message/{loggedInUser}")]
+        public async Task<IActionResult> GetExchangeMessageAsync(int loggedInUser, int exchange_id, CancellationToken cancellationToken)
         {
-            var result = await this._exchangeService.GetRequestListAsync(recipient_id, status, cancellationToken);
+            var result = await this._exchangeService.GetAllMessagesInOneExchangeAsync(loggedInUser, exchange_id, cancellationToken);
             if (!result.Success)
             {
                 return BadRequest(new ExchangeFailedResult
@@ -65,14 +65,14 @@ namespace SkillExchange.AccessService.Controllers
                     Errors = result.Errors
                 });
             }
-            return Ok(result.requestedUser);
+            return Ok(result.ExchangeResultResponse);
         }
 
         [HttpGet]
-        [Route("/api/[controller]/{recipient_id}/message/")]
-        public async Task<IActionResult> GetExchangeMessageAsync(int recipient_id, CancellationToken cancellationToken)
+        [Route("/api/[controller]/user/{sender_id}/sent/status={status}")]
+        public async Task<IActionResult> RequestSentToAsync(int sender_id, CancellationToken cancellationToken, int status = 0)
         {
-            var result = await this._exchangeService.GetExchangeMessageAsync(recipient_id, cancellationToken);
+            var result = await this._exchangeService.RequestSentToAsync(sender_id, cancellationToken, status);
             if (!result.Success)
             {
                 return BadRequest(new ExchangeFailedResult
@@ -80,9 +80,22 @@ namespace SkillExchange.AccessService.Controllers
                     Errors = result.Errors
                 });
             }
-            return Ok(result.exchangeResultResponse);
+            return Ok(result.ExchangeObjectUserModel);
         }
 
-        
+        [HttpGet]
+        [Route("/api/[controller]/user/{recipient_id}/recieved/status={status}")]
+        public async Task<IActionResult> RequestRecievedFromAsync(int recipient_id, CancellationToken cancellationToken, int status = 0)
+        {
+            var result = await this._exchangeService.RequestRecievedFromAsync(recipient_id, cancellationToken, status);
+            if (!result.Success)
+            {
+                return BadRequest(new ExchangeFailedResult
+                {
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result.ExchangeObjectUserModel);
+        }
     }
 }

@@ -10,7 +10,8 @@ namespace SkillExchange.AccessService.Domain.ExchangeDomain
     {
         public bool Success { get; set; }
         public IEnumerable<string> Errors { get; set; }
-        public IEnumerable<ExchangeResultModel> exchangeResultResponse { get; set; }
+        public IEnumerable<ExchangeResultModel> ExchangeResultResponse { get; set; }
+        public IEnumerable<ExchangeResponseModel> ExchangeObjectUserModel { get; set; }
         public int Returned_Id { get; set; }
     }
 }

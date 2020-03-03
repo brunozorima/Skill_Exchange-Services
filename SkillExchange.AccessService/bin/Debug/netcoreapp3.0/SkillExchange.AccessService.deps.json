@@ -31,6 +31,7 @@
           "Swashbuckle.AspNetCore": "4.0.1",
           "Swashbuckle.AspNetCore.Swagger": "4.0.1",
           "Swashbuckle.AspNetCore.SwaggerUI": "4.0.1",
+          "System.Collections.NonGeneric": "4.3.0",
           "System.Data.SqlClient": "4.7.0",
           "Microsoft.AspNetCore.Antiforgery": "3.0.0.0",
           "Microsoft.AspNetCore.Authentication.Abstractions.Reference": "3.0.0.0",

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SkillExchange.AccessService.Controllers
 {
-    //controller name  = person
+    //controller name  = Exchange
     [Route("api/[controller]")]
     [ApiController]
     public class ExchangeController : ControllerBase
@@ -25,7 +25,7 @@ namespace SkillExchange.AccessService.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/request")]
-        public async Task<IActionResult> RequestExchange([FromBody] ExchangeRequest exchangeRequest, CancellationToken cancellationToken)
+        public async Task<IActionResult> RequestExchangeAsync([FromBody] ExchangeRequest exchangeRequest, CancellationToken cancellationToken)
         {
             var result = await this._exchangeService.RequestExchangeAsync(exchangeRequest, cancellationToken);
             if (!result.Success)
@@ -40,7 +40,7 @@ namespace SkillExchange.AccessService.Controllers
 
         [HttpPost]
         [Route("/api/[controller]/message")]
-        public async Task<IActionResult> SendRequestExchangeMessage([FromBody] ExchangeMessage exchangeMessage, CancellationToken cancellationToken)
+        public async Task<IActionResult> SendRequestExchangeMessageAsync([FromBody] ExchangeMessage exchangeMessage, CancellationToken cancellationToken)
         {
             var result = await this._exchangeService.SendExchangeMessageAsync(exchangeMessage, cancellationToken);
             if (!result.Success)
@@ -69,7 +69,7 @@ namespace SkillExchange.AccessService.Controllers
         }
 
         [HttpGet]
-        [Route("/api/[controller]/user/{sender_id}/sent/status={status}")]
+        [Route("/api/[controller]/user/{sender_id}/sent/{status:int?}")]
         public async Task<IActionResult> RequestSentToAsync(int sender_id, CancellationToken cancellationToken, int status = 0)
         {
             var result = await this._exchangeService.RequestSentToAsync(sender_id, cancellationToken, status);
@@ -84,7 +84,7 @@ namespace SkillExchange.AccessService.Controllers
         }
 
         [HttpGet]
-        [Route("/api/[controller]/user/{recipient_id}/recieved/status={status}")]
+        [Route("/api/[controller]/user/{recipient_id}/recieved/{status:int?}")]
         public async Task<IActionResult> RequestRecievedFromAsync(int recipient_id, CancellationToken cancellationToken, int status = 0)
         {
             var result = await this._exchangeService.RequestRecievedFromAsync(recipient_id, cancellationToken, status);

@@ -116,6 +116,18 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
                 FROM [Exchange] WHERE [Id] = @{nameof(request_id)}", new { request_id });
             }
         }
+        public async Task<ExchangeMessage> GetMessageById(int message_id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                return await connection.QuerySingleOrDefaultAsync<ExchangeMessage>($@"
+                SELECT [Id],[Sender_Id],[Exchange_Id],[Body], [TimeStamp] 
+                FROM [ExchangeMessage] WHERE [Id] = @{nameof(message_id)}", new { message_id });
+            }
+        }
+
 
     }
 }

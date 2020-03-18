@@ -38,6 +38,7 @@ C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Servi
 C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Services\SkillExchange.AccessService\bin\Debug\netcoreapp3.0\runtimes\win-x86\native\sni.dll
 C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Services\SkillExchange.AccessService\bin\Debug\netcoreapp3.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
 C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Services\SkillExchange.AccessService\bin\Debug\netcoreapp3.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Services\SkillExchange.AccessService\obj\Debug\netcoreapp3.0\SkillExchange.AccessService.csprojAssemblyReference.cache
 C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Services\SkillExchange.AccessService\obj\Debug\netcoreapp3.0\staticwebassets\SkillExchange.AccessService.StaticWebAssets.Manifest.cache
 C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Services\SkillExchange.AccessService\obj\Debug\netcoreapp3.0\staticwebassets\SkillExchange.AccessService.StaticWebAssets.xml
 C:\Users\BRUNO ZORIMA\Documents\Projects\Final_Year_Project\Skill-Exchange-Services\SkillExchange.AccessService\obj\Debug\netcoreapp3.0\SkillExchange.AccessService.MvcApplicationPartsAssemblyInfo.cs

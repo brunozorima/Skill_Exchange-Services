@@ -69,6 +69,21 @@ namespace SkillExchange.AccessService.Controllers
         }
 
         [HttpGet]
+        [Route("/api/Message/{message_id}/user/{loggedInUser}")]
+        public async Task<IActionResult> GetMessageById(int loggedInUser, int message_id, CancellationToken cancellationToken)
+        {
+            var result = await this._exchangeService.GetMessageById(message_id, loggedInUser, cancellationToken);
+            if (!result.Success)
+            {
+                return BadRequest(new ExchangeFailedResult
+                {
+                    Errors = result.Errors
+                });
+            }
+            return Ok(result.ExchangeMessage);
+        }
+
+        [HttpGet]
         [Route("/api/[controller]/user/{sender_id}/sent/{status:int?}")]
         public async Task<IActionResult> RequestSentToAsync(int sender_id, CancellationToken cancellationToken, int status = 0)
         {

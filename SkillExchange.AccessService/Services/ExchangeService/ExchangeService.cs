@@ -69,9 +69,9 @@ namespace SkillExchange.AccessService.Services.ExchangeService
             //get all the messages beloging to an exchange
             var messages = await this._exchangeRepository.GetAllMessagesInOneExchange(loggedInUser, exchange_id, cancellationToken);
             var exchange = await this.GetExchangeRequestByIdAsync(exchange_id, cancellationToken);
-            if(messages != null)
+            if (messages != null)
             {
-                foreach(var message in messages)
+                foreach (var message in messages)
                 {
                     if (message.Sender_Id == exchange.Recipient_Id) { loggedInUser = exchange.Sender_Id; } else { loggedInUser = exchange.Recipient_Id; }
                     var messageResult = new ExchangeResultModel
@@ -87,7 +87,34 @@ namespace SkillExchange.AccessService.Services.ExchangeService
                 return new ExchangeResult
                 {
                     Success = true,
-                    ExchangeResultResponse = MessageList.OrderByDescending(message => message.TimeStamp)
+                    ExchangeResultResponse = MessageList.OrderBy(message => message.TimeStamp)
+                };
+            }
+            return new ExchangeResult
+            {
+                Errors = new[] { "No Messages Found In This Exchange!" }
+            };
+        }
+        public async Task<ExchangeResult> GetMessageById(int message_id, int loggedInUser, CancellationToken cancellationToken)
+        {
+            var message = await this._exchangeRepository.GetMessageById(message_id, cancellationToken);
+            var exchange = await this.GetExchangeRequestByIdAsync(message.Exchange_Id, cancellationToken);
+            if (message.Sender_Id == exchange.Recipient_Id) { loggedInUser = exchange.Sender_Id; } else { loggedInUser = exchange.Recipient_Id; }
+
+            if (message != null)
+            {
+                var messageResult = new ExchangeResultModel
+                {
+                    From = this._identityService.GetUserByIdAsync(message.Sender_Id).Result.authSuccessResponse.FirstName,
+                    To = this._identityService.GetUserByIdAsync(loggedInUser).Result.authSuccessResponse.FirstName,
+                    Exchange_Id = message.Exchange_Id,
+                    Body = message.Body,
+                    TimeStamp = message.TimeStamp
+                };
+                return new ExchangeResult
+                {
+                    Success = true,
+                    ExchangeMessage = messageResult
                 };
             }
             return new ExchangeResult

@@ -13,5 +13,6 @@ namespace SkillExchange.AccessService.Domain.ExchangeDomain
         public IEnumerable<ExchangeResultModel> ExchangeResultResponse { get; set; }
         public IEnumerable<ExchangeResponseModel> ExchangeObjectUserModel { get; set; }
         public int Returned_Id { get; set; }
+        public ExchangeResultModel ExchangeMessage { get; set; }
     }
 }

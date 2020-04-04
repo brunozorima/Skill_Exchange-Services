@@ -128,6 +128,30 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
             }
         }
 
+        public async Task<ExchangeRequest> UpdateRequestStatus(int request_id, int status, int recipient, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                return await connection.QuerySingleOrDefaultAsync<ExchangeRequest>($@"
+                 UPDATE [Exchange]
+                 SET [Status] = @{nameof(status)}
+                 WHERE [Id] = @{nameof(request_id)} AND [Recipient_Id] = @{nameof(recipient)}", new { request_id, status, recipient });
+            }           
+        }
+        public async Task<int> RejectRequest(int request_id, int user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                await connection.QuerySingleOrDefaultAsync<int>($@"
+                DELETE FROM [Exchange]
+                WHERE [Id] = @{nameof(request_id)} AND [Recipient_Id] = @{nameof(user)} OR [Sender_Id]= @{nameof(user)}", new { request_id, user});
+            }
+            return request_id;
+        }
 
     }
 }

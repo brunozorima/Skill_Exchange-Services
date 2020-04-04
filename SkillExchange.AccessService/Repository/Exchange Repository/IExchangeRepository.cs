@@ -17,5 +17,7 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
         public Task<IEnumerable<ExchangeResponseModel>> RequestRecievedFrom(int recipient_id, CancellationToken cancellationToken, int status);
         public Task<ExchangeRequest> GetExchangeRequestById(int request_id, CancellationToken cancellationToken);
         public Task<ExchangeMessage> GetMessageById(int message_id, CancellationToken cancellationToken);
+        public Task<ExchangeRequest> UpdateRequestStatus(int request_id, int status, int recipient, CancellationToken cancellationToken);
+        public Task<int> RejectRequest(int request_id, int user, CancellationToken cancellationToken);
     }
 }

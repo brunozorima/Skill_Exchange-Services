@@ -112,5 +112,29 @@ namespace SkillExchange.AccessService.Controllers
             }
             return Ok(result.ExchangeObjectUserModel);
         }
+
+        [HttpPut]
+        [Route("/api/[controller]/{request_id}/{status}/{recipient}")]
+        public async Task<IActionResult> UpdateExchangeRequest(int request_id, int status, int recipient, CancellationToken cancellationToken)
+        {
+            await this._exchangeService.UpdateRequestStatusAsync(request_id, status, recipient, cancellationToken);
+            var result = new ExchangeRequest
+            {
+                Id = 0                
+            };
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("/api/[controller]/{id}/user/{user_id}")]
+        public async Task<IActionResult> RejectRequest(int id, int user_id, CancellationToken cancellationToken)
+        {
+            var res = await this._exchangeService.RejectRequest(id, user_id, cancellationToken);
+            if(res < 1)
+            {
+                return BadRequest("Invalid Request!");
+            }
+            return Ok(res);
+        }
     }
 }

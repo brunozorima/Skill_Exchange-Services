@@ -18,6 +18,7 @@ namespace SkillExchange.AccessService.Services.ExchangeService
         public Task<ExchangeResult> RequestRecievedFromAsync(int recipient_id, CancellationToken cancellationToken, int status);
         public Task<ExchangeRequest> GetExchangeRequestByIdAsync(int request_id, CancellationToken cancellationToken);
         public Task<ExchangeResult> GetMessageById(int message_id, int loggedInUser, CancellationToken cancellationToken);
-
+        public Task<ExchangeRequest> UpdateRequestStatusAsync(int request_id, int status, int recipient, CancellationToken cancellationToken);
+        public Task<int> RejectRequest(int request_id, int user, CancellationToken cancellationToken);
     }
 }

@@ -190,5 +190,15 @@ namespace SkillExchange.AccessService.Services.ExchangeService
                 Errors = new[] { "No Recieved Requests Found!" }
             };
         }
+        public async Task<ExchangeRequest> UpdateRequestStatusAsync(int request_id, int status, int recipient, CancellationToken cancellationToken)
+        {
+            var exchange = await this._exchangeRepository.UpdateRequestStatus(request_id, status, recipient, cancellationToken);
+            return exchange;
+        }
+        public async Task<int> RejectRequest(int request_id, int user, CancellationToken cancellationToken)
+        {
+            var result = await this._exchangeRepository.RejectRequest(request_id, user, cancellationToken);
+            return result;
+        }
     }
 }

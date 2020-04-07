@@ -20,6 +20,8 @@ namespace SkillExchange.AccessService.Services.SkillService
         public Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillIdAsync(int skill_id, CancellationToken cancellationToken);
         public Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsSkillIdAsync(int skill_id, CancellationToken cancellationToken);
         public Task<UserProfileModel> GetUserSkillDataAsync(int user_id, CancellationToken cancellationToken);
+        public Task<IEnumerable<UserProfileModel>> GetAllserSkillDataAsync(CancellationToken cancellationToken);
+
 
     }
 }

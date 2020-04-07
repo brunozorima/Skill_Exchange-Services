@@ -121,5 +121,16 @@ namespace SkillExchange.AccessService.Controllers
             }
             return BadRequest("Not User Found!");
         }
+        [HttpGet]
+        [Route("/api/[controller]")]
+        public async Task<IActionResult> GetAllUsersSkills(CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.GetAllserSkillDataAsync(cancellationToken);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Not Users Found!");
+        }
     }
 }

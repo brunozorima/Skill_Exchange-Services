@@ -130,5 +130,19 @@ namespace SkillExchange.AccessService.Services.SkillService
             }
             return null;
         }
+        public async Task<IEnumerable<UserProfileModel>> GetAllserSkillDataAsync(CancellationToken cancellationToken)
+        {
+            List<UserProfileModel> allUsers = new List<UserProfileModel>();
+            var users = await this._identityService.ListUsers(cancellationToken);
+            if(users != null)
+            {
+                foreach(var user in users)
+                {
+                    var userObj = await this.GetUserSkillDataAsync(user.Id, cancellationToken);
+                    allUsers.Add(userObj);
+                }
+            }
+            return allUsers;
+        }
     }
 }

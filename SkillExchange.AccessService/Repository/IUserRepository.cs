@@ -12,6 +12,7 @@ namespace SkillExchange.AccessService.Repository
     public interface IUserRepository<TUser> : IDisposable where TUser : class
     {
         public Task<IEnumerable<ApplicationUser>> GetAllUsersAsync(CancellationToken cancellationToken);
+        public Task<ApplicationUser> GetUserdById(int user_id, CancellationToken cancellationToken);
         //User GetUserById(int Id);
         //User Save(User user);
         //User UpdateUserById(User user);

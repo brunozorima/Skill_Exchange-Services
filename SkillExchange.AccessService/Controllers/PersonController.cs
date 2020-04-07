@@ -16,9 +16,11 @@ namespace SkillExchange.AccessService.Controllers
     public class PersonController : ControllerBase
     {
         private readonly IPerson_Has_Need_Skill_Service _person_Has_Need_Skill_Service;
-        public PersonController(IPerson_Has_Need_Skill_Service person_Has_Need_Skill_Service)
+        private readonly ISkillService _skillService;
+        public PersonController(IPerson_Has_Need_Skill_Service person_Has_Need_Skill_Service, ISkillService skillService)
         {
             this._person_Has_Need_Skill_Service = person_Has_Need_Skill_Service;
+            this._skillService = skillService;
         }
 
         /// <summary>
@@ -106,6 +108,18 @@ namespace SkillExchange.AccessService.Controllers
                 });
             }
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("/api/[controller]/{person_id}")]
+        public async Task<IActionResult> GetUserSkillData(int person_id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.GetUserSkillDataAsync(person_id, cancellationToken);
+            if(result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Not User Found!");
         }
     }
 }

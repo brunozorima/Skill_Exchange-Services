@@ -163,7 +163,7 @@ namespace SkillExchange.AccessService.Services
             };
 
         }
-
+ 
         public async Task<AuthenticationResult> UpdateUserByIdAsync(User user)
         {
             var _user = await this._userManager.FindByIdAsync(user.Id.ToString());
@@ -217,11 +217,29 @@ namespace SkillExchange.AccessService.Services
             //this needs to be used when changing passwords
             //var newPasswordHash = this._userManager.PasswordHasher.HashPassword(_user, user.Password);
         }
-
+        //Created methods manually BELOW
         public async Task<IEnumerable<ApplicationUser>> ListUsers(CancellationToken cancellationToken)
         {
             var result = await this._userRepository.GetAllUsersAsync(cancellationToken);
             return result;
         }
+        public async Task<ApplicationUser> GetUserById(int id, CancellationToken cancellationToken)
+        {
+            var user = await this._userRepository.GetUserdById(id, cancellationToken);
+            return user;
+            //if (user == null)
+            //{
+            //    return new ApplicationUser();
+            //}
+            //var userObject = new ApplicationUser
+            //{
+            //    Id = user.Id,
+            //    Email = user.Email,
+            //    FirstName = user.FirstName,
+            //    LastName = user.LastName
+            //};
+            //return userObject;
+        }
+
     }
 }

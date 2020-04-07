@@ -87,8 +87,18 @@ namespace SkillExchange.AccessService.Repository
                 return result.ToList();
             }
         }
-
-         public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+        //Get a user based on Id
+        public async Task<ApplicationUser> GetUserdById(int user_id, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                return await connection.QuerySingleOrDefaultAsync<ApplicationUser>($@"SELECT [Id], [UserName], [FirstName], [LastName], [Email] FROM [ApplicationUser]
+                WHERE [Id] = @{nameof(user_id)}", new { user_id });
+            }
+        }
+        public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
          {
             return Task.FromResult(user.NormalizedUserName);
          }

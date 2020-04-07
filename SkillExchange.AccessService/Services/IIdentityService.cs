@@ -16,5 +16,6 @@ namespace SkillExchange.AccessService.Services
         public Task<AuthenticationResult> DeleteAsync(int id);
         public Task<AuthenticationResult> GetUserByIdAsync(int id);
         public Task<AuthenticationResult> UpdateUserByIdAsync(User user);
+        public Task<ApplicationUser> GetUserById(int id, CancellationToken cancellationToken);
     }
 }

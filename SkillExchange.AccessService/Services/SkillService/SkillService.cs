@@ -14,9 +14,14 @@ namespace SkillExchange.AccessService.Services.SkillService
     public class SkillService : ISkillService
     {
         private readonly ISkillRepository _skillRepository;
-        public SkillService(ISkillRepository skillRepository)
+        public readonly IIdentityService _identityService;
+        public readonly IPerson_Has_Need_Skill_Service _person_Has_Need_Skill_Service;
+
+        public SkillService(ISkillRepository skillRepository, IIdentityService identityService, IPerson_Has_Need_Skill_Service person_Has_Need_Skill_Service)
         {
             this._skillRepository = skillRepository;
+            this._identityService = identityService;
+            this._person_Has_Need_Skill_Service = person_Has_Need_Skill_Service;
         }
 
         public async Task<SkillResult> AddSkillAsync(SkillModel skill, CancellationToken cancellationToken)
@@ -106,6 +111,24 @@ namespace SkillExchange.AccessService.Services.SkillService
         {
             var result = await this._skillRepository.GetPersonOwningSkillsBySkillId(skill_id, cancellationToken);
             return result;
+        }
+
+        public async Task<UserProfileModel> GetUserSkillDataAsync(int user_id, CancellationToken cancellationToken)
+        {            
+            var user = await this._identityService.GetUserById(user_id, cancellationToken);           
+            var userHaveSkills = await this._person_Has_Need_Skill_Service.GetPersonHasSkillById(user_id, cancellationToken);
+            var userNeedSkills = await this._person_Has_Need_Skill_Service.GetPersonNeedSkillById(user_id, cancellationToken);
+            if(user != null)
+            {
+                var userProfileModel = new UserProfileModel
+                {
+                    UserDetails = user,
+                    UserHaveSkills = userHaveSkills,
+                    UserNeedSkills = userNeedSkills
+                };
+                return userProfileModel;
+            }
+            return null;
         }
     }
 }

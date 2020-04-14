@@ -21,7 +21,8 @@ namespace SkillExchange.AccessService.Services.SkillService
         public Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsSkillIdAsync(int skill_id, CancellationToken cancellationToken);
         public Task<UserProfileModel> GetUserSkillDataAsync(int user_id, CancellationToken cancellationToken);
         public Task<IEnumerable<UserProfileModel>> GetAllserSkillDataAsync(CancellationToken cancellationToken);
-
-
+        public Task<IEnumerable<UserProfileModel>> ShowUsersWithMatchingSkills(int loggedInUser, CancellationToken cancellationToken);
+        public Task<IEnumerable<UserProfileModel>> ShowUsersWithSkillsHave(int loggedInUser, CancellationToken cancellationToken);
+        public Task<IEnumerable<UserProfileModel>> ShowUsersWithSkillsWant(int loggedInUser, CancellationToken cancellationToken);
     }
 }

@@ -132,5 +132,38 @@ namespace SkillExchange.AccessService.Controllers
             }
             return BadRequest("Not Users Found!");
         }
+        [HttpGet]
+        [Route("/api/[controller]/{person_id}/skills")]
+        public async Task<IActionResult> ShowUsersWithMatchingSkillsAsync(int person_id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.ShowUsersWithMatchingSkills(person_id, cancellationToken);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Not Users Found!");
+        }
+        [HttpGet]
+        [Route("/api/[controller]/{person_id}/skills/have")]
+        public async Task<IActionResult> ShowUsersWithSkillsHaveAsync(int person_id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.ShowUsersWithSkillsHave(person_id, cancellationToken);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Not Users With the Skills you Have Found!");
+        }
+        [HttpGet]
+        [Route("/api/[controller]/{person_id}/skills/want")]
+        public async Task<IActionResult> ShowUsersWithSkillsWantAsync(int person_id, CancellationToken cancellationToken)
+        {
+            var result = await this._skillService.ShowUsersWithSkillsWant(person_id, cancellationToken);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Not Users With the Skills you Want Found!");
+        }
     }
 }

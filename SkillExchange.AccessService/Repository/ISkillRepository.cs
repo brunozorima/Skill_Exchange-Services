@@ -18,6 +18,8 @@ namespace SkillExchange.AccessService.Repository
         public Task<IEnumerable<SkillModel>> FindSkillByName(string name, CancellationToken cancellationToken);
         public Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillId(int skill_id, CancellationToken cancellationToken);
         public Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsBySkillId(int skill_id, CancellationToken cancellationToken);
-
+        public Task<IEnumerable<int>> GetAutoMatch(int loggedInUser, CancellationToken cancellationToken);
+        public Task<IEnumerable<int>> GetPeopleWithSkillsWant(int loggedInUser, CancellationToken cancellationToken);
+        public Task<IEnumerable<int>> GetPeopleWithSkillsHave(int loggedInUser, CancellationToken cancellationToken);
     }
 }

@@ -125,7 +125,68 @@ namespace SkillExchange.AccessService.Repository
                     JOIN [Person_Has_Skill] [PHS] ON [U].Id = [PHS].[Person_Id]
                     WHERE [PHS].[Skill_Id] = @{nameof(skill_id)}", new { skill_id });
                 return result.ToList();
+            }        
+        }
+        //GET ALL THE PEOPLE THAT HAVE THE SKILLS I NEED AND THE PEOPLE NEEDS THE SKILLS I HAVE AND MATCH ONLY THOSE WITH EXCHANGABLE SKILLS
+        public async Task<IEnumerable<int>> GetAutoMatch(int loggedInUser, CancellationToken cancellationToken)
+        {
+            var sql = "SELECT WantedSkills.wants, haveSkills.has FROM " +
+                "(SELECT Person_Id as wants, count(*) as _countHave FROM [Person_Need_Skill] " +
+                "WHERE Skill_Id " +
+                "IN(SELECT Skill_Id from [Person_Has_Skill] WHERE Person_Id = @loggedInUser) " +
+                "Group By Person_Id " +
+                "Having COUNT(Person_Id) > 0) AS WantedSkills, " +
+                "(SELECT Person_Id AS has, count(Person_Id) as _countWant from [Person_Has_Skill] WHERE Skill_Id " +
+                "IN(SELECT Skill_Id FROM [Person_Need_Skill] WHERE Person_Id = @loggedInUser) " +
+                "Group By Person_Id " +
+                "Having COUNT(Person_Id) > 0) as haveSkills " +
+                "WHERE WantedSkills.wants = haveSkills.has " +
+                "AND WantedSkills._countHave > 0 " +
+                "AND haveSkills._countWant > 0";
+
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<int>(sql, new { loggedInUser });
+                return result.ToList();
             }
         }
+        //GET ALL THE PEOPLE THAT HAVE THE SKILLS I WANT
+        public async Task<IEnumerable<int>> GetPeopleWithSkillsWant(int loggedInUser, CancellationToken cancellationToken)
+        {
+            var sql = "SELECT WantedSkills.wants FROM " +
+                "(SELECT Person_Id as wants FROM [Person_Need_Skill] " +
+                "WHERE Skill_Id " +
+                "IN(SELECT Skill_Id from [Person_Has_Skill] WHERE Person_Id = @loggedInUser) " +
+                "Group By Person_Id " +
+                "Having COUNT(Person_Id) > 0) AS WantedSkills";
+
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<int>(sql, new { loggedInUser });
+                return result.ToList();
+            }
+        }
+        //GET ALL THE PEOPLE THAT NEEDS THE SKILLS I HAVE
+        public async Task<IEnumerable<int>> GetPeopleWithSkillsHave(int loggedInUser, CancellationToken cancellationToken)
+        {
+            var sql = "SELECT haveSkills.has FROM " +
+                "(SELECT Person_Id AS has FROM [Person_Has_Skill] WHERE Skill_Id " +
+                "IN(SELECT Skill_Id FROM [Person_Need_Skill] WHERE Person_Id = @loggedInUser) " +
+                "Group By Person_Id " +
+                "Having COUNT(Person_Id) > 0) AS haveSkills";
+
+            cancellationToken.ThrowIfCancellationRequested();
+            using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
+            {
+                await connection.OpenAsync(cancellationToken);
+                var result = await connection.QueryAsync<int>(sql, new { loggedInUser });
+                return result.ToList();
+            }
+        }
+
     }
 }

@@ -113,6 +113,7 @@ namespace SkillExchange.AccessService.Services.SkillService
             return result;
         }
 
+        //Builds the user details which includes their personal information, as well as their have/need skills info
         public async Task<UserProfileModel> GetUserSkillDataAsync(int user_id, CancellationToken cancellationToken)
         {            
             var user = await this._identityService.GetUserById(user_id, cancellationToken);           
@@ -130,6 +131,7 @@ namespace SkillExchange.AccessService.Services.SkillService
             }
             return null;
         }
+        //get all users with their skills details too
         public async Task<IEnumerable<UserProfileModel>> GetAllserSkillDataAsync(CancellationToken cancellationToken)
         {
             List<UserProfileModel> allUsers = new List<UserProfileModel>();
@@ -139,6 +141,48 @@ namespace SkillExchange.AccessService.Services.SkillService
                 foreach(var user in users)
                 {
                     var userObj = await this.GetUserSkillDataAsync(user.Id, cancellationToken);
+                    allUsers.Add(userObj);
+                }
+            }
+            return allUsers;
+        }
+        public async Task<IEnumerable<UserProfileModel>> ShowUsersWithMatchingSkills(int loggedInUser, CancellationToken cancellationToken)
+        {
+            List<UserProfileModel> allUsers = new List<UserProfileModel>();
+            var getUserWithMatchSkills = await this._skillRepository.GetAutoMatch(loggedInUser, cancellationToken);
+            if (getUserWithMatchSkills != null)
+            {
+                foreach (var user in getUserWithMatchSkills)
+                {
+                    var userObj = await this.GetUserSkillDataAsync(user, cancellationToken);
+                    allUsers.Add(userObj);
+                }
+            }
+            return allUsers;
+        }
+        public async Task<IEnumerable<UserProfileModel>> ShowUsersWithSkillsHave(int loggedInUser, CancellationToken cancellationToken)
+        {
+            List<UserProfileModel> allUsers = new List<UserProfileModel>();
+            var getUserWithSkillsIhave = await this._skillRepository.GetPeopleWithSkillsHave(loggedInUser, cancellationToken);
+            if (getUserWithSkillsIhave != null)
+            {
+                foreach (var user in getUserWithSkillsIhave)
+                {
+                    var userObj = await this.GetUserSkillDataAsync(user, cancellationToken);
+                    allUsers.Add(userObj);
+                }
+            }
+            return allUsers;
+        }
+        public async Task<IEnumerable<UserProfileModel>> ShowUsersWithSkillsWant(int loggedInUser, CancellationToken cancellationToken)
+        {
+            List<UserProfileModel> allUsers = new List<UserProfileModel>();
+            var getUserWithSkillsIwant = await this._skillRepository.GetPeopleWithSkillsWant(loggedInUser, cancellationToken);
+            if (getUserWithSkillsIwant != null)
+            {
+                foreach (var user in getUserWithSkillsIwant)
+                {
+                    var userObj = await this.GetUserSkillDataAsync(user, cancellationToken);
                     allUsers.Add(userObj);
                 }
             }

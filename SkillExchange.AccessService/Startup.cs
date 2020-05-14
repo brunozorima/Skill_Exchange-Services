@@ -17,8 +17,10 @@ using Microsoft.IdentityModel.Tokens;
 using SkillExchange.AccessService.Models;
 using SkillExchange.AccessService.Repository;
 using SkillExchange.AccessService.Repository.Exchange_Repository;
+using SkillExchange.AccessService.Repository.ImageUpload;
 using SkillExchange.AccessService.Services;
 using SkillExchange.AccessService.Services.ExchangeService;
+using SkillExchange.AccessService.Services.ImageService;
 using SkillExchange.AccessService.Services.SkillService;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -42,8 +44,10 @@ namespace SkillExchange.AccessService
             
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<ISkillRepository, SkillRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IExchangeRepository, ExchangeRepository>();
             services.AddScoped<IExchangeService, ExchangeService>();
+            services.AddScoped<IImageService, ImageService>();
             services.AddScoped<ISkillService, SkillService>();
             services.AddScoped<IPerson_Has_Need_Skill_Service, Person_Has_Need_Skill_Service>();
             services.AddScoped<IPerson_Has_Need_Skill_Repo, Person_Has_Need_Skill_Repo>();

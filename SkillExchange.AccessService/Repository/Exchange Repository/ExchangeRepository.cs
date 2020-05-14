@@ -135,9 +135,10 @@ namespace SkillExchange.AccessService.Repository.Exchange_Repository
             {
                 await connection.OpenAsync(cancellationToken);
                 return await connection.QuerySingleOrDefaultAsync<ExchangeRequest>($@"
-                 UPDATE [Exchange]
+                 UPDATE [FYP_CONCEPT].[dbo].[Exchange] 
                  SET [Status] = @{nameof(status)}
-                 WHERE [Id] = @{nameof(request_id)} AND [Recipient_Id] = @{nameof(recipient)}", new { request_id, status, recipient });
+                 WHERE [Id] = @{nameof(request_id)} 
+                 AND ([Recipient_Id] = @{nameof(recipient)} OR [Sender_Id] = @{nameof(recipient)})", new { request_id, status, recipient });
             }           
         }
         public async Task<int> RejectRequest(int request_id, int user, CancellationToken cancellationToken)

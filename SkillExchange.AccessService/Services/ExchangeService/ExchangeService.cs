@@ -14,7 +14,7 @@ namespace SkillExchange.AccessService.Services.ExchangeService
     public class ExchangeService : IExchangeService
     {
         public readonly IExchangeRepository _exchangeRepository;
-        public readonly IIdentityService _identityService;
+        public readonly IIdentityService _identityService;               
         public ExchangeService(IExchangeRepository exchangeRepository, IIdentityService identityService)
         {
             this._exchangeRepository = exchangeRepository;

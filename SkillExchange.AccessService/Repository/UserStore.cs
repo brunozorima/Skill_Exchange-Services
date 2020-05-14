@@ -94,8 +94,8 @@ namespace SkillExchange.AccessService.Repository
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
                 await connection.OpenAsync(cancellationToken);
-                return await connection.QuerySingleOrDefaultAsync<ApplicationUser>($@"SELECT [Id], [UserName], [FirstName], [LastName], [Email] FROM [ApplicationUser]
-                WHERE [Id] = @{nameof(user_id)}", new { user_id });
+                return await connection.QuerySingleOrDefaultAsync<ApplicationUser>($@"SELECT [Id], [UserName], [FirstName], [LastName], [Email], [Description],[Education],[WorkExperience],[Location],[Photo] FROM [ApplicationUser]
+                WHERE [Id] = @{nameof(user_id)}", new { user_id });                
             }
         }
         public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
@@ -143,7 +143,12 @@ namespace SkillExchange.AccessService.Repository
                 [EmailConfirmed] = @{nameof(ApplicationUser.EmailConfirmed)},             
                 [PhoneNumber] = @{nameof(ApplicationUser.PhoneNumber)},
                 [PhoneNumberConfirmed] = @{nameof(ApplicationUser.PhoneNumberConfirmed)},
-                [TwoFactorEnabled] = @{nameof(ApplicationUser.TwoFactorEnabled)}
+                [TwoFactorEnabled] = @{nameof(ApplicationUser.TwoFactorEnabled)},
+                [Description] = @{nameof(ApplicationUser.Description)},
+                [Education] = @{nameof(ApplicationUser.Education)},
+                [WorkExperience] = @{nameof(ApplicationUser.WorkExperience)},
+                [Location] = @{nameof(ApplicationUser.Location)},
+                [Photo] = @{nameof(ApplicationUser.PhotoId)}
                 WHERE [Id] = @{nameof(ApplicationUser.Id)}", user);
             }
             ////[PasswordHash] = @{nameof(ApplicationUser.PasswordHash)},

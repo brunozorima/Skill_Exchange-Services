@@ -13,7 +13,7 @@ namespace SkillExchange.AccessService.Repository
         public Task<IEnumerable<SkillModel>> GetAllSkillsAsync(CancellationToken cancellationToken);
         public Task<SkillModel> GetSkillById(int id, CancellationToken cancellationToken);
         public Task<IEnumerable<SkillModel>> GetSkillByCategory(int category_id, CancellationToken cancellationToken);
-        public Task<SkillModel> AddSkill(SkillModel skillModel, CancellationToken cancellationToken);
+        public Task<int> AddSkill(SkillModel skillModel, CancellationToken cancellationToken);
         public Task<IdentityResult> DeleteSkill(int id, CancellationToken cancellationToken);
         public Task<IEnumerable<SkillModel>> FindSkillByName(string name, CancellationToken cancellationToken);
         public Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillId(int skill_id, CancellationToken cancellationToken);

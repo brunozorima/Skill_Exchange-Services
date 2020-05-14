@@ -24,20 +24,35 @@ namespace SkillExchange.AccessService.Services.SkillService
             this._person_Has_Need_Skill_Service = person_Has_Need_Skill_Service;
         }
 
-        public async Task<SkillResult> AddSkillAsync(SkillModel skill, CancellationToken cancellationToken)
+        public async Task<SkillResult> AddSkillAsync(SkillModel skill, int type, int belongsTo, CancellationToken cancellationToken)
         {
-            var skillToAdd = await this._skillRepository.AddSkill(skill, cancellationToken);
-            if(skillToAdd != null)
+            var addedSkillId = await this._skillRepository.AddSkill(skill, cancellationToken);
+            if(addedSkillId > 0)
             {
-                return new SkillResult
+                // is it an --> owned skill#
+                if(type == 0)
                 {
-                    Success = true,
-                    SkillSuccessResponse = skillToAdd
-                };
+                    var res = await this._person_Has_Need_Skill_Service.AddPersonHasSkillById(belongsTo, addedSkillId, cancellationToken);
+                    return new SkillResult
+                    {
+                        Success = true,
+                        skillAddedId = addedSkillId
+                    };
+                }
+                else
+                {
+                    //wanted skill
+                    var res = await this._person_Has_Need_Skill_Service.AddPersonNeedSkillById(belongsTo, addedSkillId, cancellationToken);
+                    return new SkillResult
+                    {
+                        Success = true,
+                        skillAddedId = addedSkillId
+                    };
+                }                
             }
             return new SkillResult
             {
-                Errors = new[] { "Skill cannot be added!"}
+                Errors = new[] { "Skill cannot be created!"}
             };
         }
 
@@ -101,16 +116,43 @@ namespace SkillExchange.AccessService.Services.SkillService
             return result;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetWantedPersonBySkillIdAsync(int skill_id, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UserProfileModel>> GetWantedPersonBySkillIdAsync(int skill_id, CancellationToken cancellationToken)
         {
             var result = await this._skillRepository.GetWantedPersonBySkillId(skill_id, cancellationToken);
-            return result;
+            //list of users to be return
+            List<UserProfileModel> usersWanting = new List<UserProfileModel>();
+            //get each user and construct their 'userProfileWithTheirSkiils'
+            if (result != null)
+            {
+                foreach (var user in result)
+                {
+                    //contruct their data
+                    var u = await this.GetUserSkillDataAsync(user.Id, cancellationToken);
+                    usersWanting.Add(u);
+                }
+                return usersWanting;
+            }
+            return null;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetPersonOwningSkillsSkillIdAsync(int skill_id, CancellationToken cancellationToken)
+        public async Task<IEnumerable<UserProfileModel>> GetPersonOwningSkillsSkillIdAsync(int skill_id, CancellationToken cancellationToken)
         {
+            //all user matching a skill id
             var result = await this._skillRepository.GetPersonOwningSkillsBySkillId(skill_id, cancellationToken);
-            return result;
+            //list of users to be return
+            List<UserProfileModel> usersOwning = new List<UserProfileModel>();
+            //get each user and construct their 'userProfileWithTheirSkiils'
+            if (result != null)
+            {
+                foreach (var user in result)
+                {
+                    //contruct their data
+                    var u = await this.GetUserSkillDataAsync(user.Id, cancellationToken);
+                    usersOwning.Add(u);
+                }
+                return usersOwning;
+            }
+            return null;
         }
 
         //Builds the user details which includes their personal information, as well as their have/need skills info

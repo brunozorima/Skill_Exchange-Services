@@ -19,18 +19,20 @@ namespace SkillExchange.AccessService.Repository
             this._dbConnectionProvider = dbConnectionProvider;
         }
 
-        public async Task<SkillModel> AddSkill(SkillModel skillModel, CancellationToken cancellationToken)
+        public async Task<int> AddSkill(SkillModel skillModel, CancellationToken cancellationToken)
         {
-            SkillModel skillModelResult = null;
+            var category = (int)skillModel.Category;
+            var skillName = skillModel.Name;
+
             cancellationToken.ThrowIfCancellationRequested();
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
                 await connection.OpenAsync(cancellationToken);
-                skillModelResult = await connection.QuerySingleAsync<SkillModel>($@"INSERT INTO [Skill] ([Id], [Name], [Category],                
-                VALUES (@{nameof(SkillModel.Id)}, @{nameof(SkillModel.Name)}, @{nameof(SkillModel.Category)});
-                SELECT CAST(SCOPE_IDENTITY() as int)", skillModel);
+                skillModel.Id = await connection.QuerySingleAsync<int>($@"INSERT INTO [Skill] ([Name], [Category])                
+                VALUES (@{nameof(skillName)}, @{nameof(category)});
+                SELECT CAST(SCOPE_IDENTITY() as int)", new { skillName, category });
             }
-            return skillModelResult;
+            return skillModel.Id;
         }
 
         public async Task<IdentityResult> DeleteSkill(int id, CancellationToken cancellationToken)
@@ -57,12 +59,12 @@ namespace SkillExchange.AccessService.Repository
 
         public async Task<IEnumerable<SkillModel>> GetSkillByCategory(int category_id, CancellationToken cancellationToken)
         {
-            var category = Enum.GetName(typeof(Category), category_id);
+            //var category = Enum.GetName(typeof(Category), category_id);
             cancellationToken.ThrowIfCancellationRequested();
             using (var connection = new SqlConnection(this._dbConnectionProvider.GetConnectionString()))
             {
                 await connection.OpenAsync(cancellationToken);
-                var result = await connection.QueryAsync<SkillModel>($@"SELECT [Id], [Name], [Category] FROM [Skill] WHERE [Category] = @{nameof(category)}", new { category });
+                var result = await connection.QueryAsync<SkillModel>($@"SELECT [Id], [Name], [Category] FROM [Skill] WHERE [Category] = @{nameof(category_id)}", new { category_id });
                 return result.ToList();
             }
         }

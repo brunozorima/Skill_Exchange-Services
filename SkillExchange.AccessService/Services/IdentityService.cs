@@ -109,7 +109,11 @@ namespace SkillExchange.AccessService.Services
                 Email = newUser.Email,
                 FirstName = newUser.FirstName,
                 LastName = newUser.LastName,
-                Password = null,
+                Location = newUser.Location,
+                Description = newUser.Description,
+                Education = newUser.Education,
+                WorkExperience = newUser.WorkExperience,
+                PhotoId = newUser.PhotoId,
                 Token = tokenHandler.WriteToken(token)
             };
     
@@ -154,7 +158,13 @@ namespace SkillExchange.AccessService.Services
                 Id = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
-                LastName = user.LastName
+                LastName = user.LastName,
+                Description =  user.Description,
+                Education = user.Education,
+                Location = user.Location,
+                WorkExperience = user.WorkExperience,
+                PhotoId = user.PhotoId,
+                Token = null
             };
             return new AuthenticationResult
             {
@@ -164,7 +174,7 @@ namespace SkillExchange.AccessService.Services
 
         }
  
-        public async Task<AuthenticationResult> UpdateUserByIdAsync(User user)
+        public async Task<AuthenticationResult> UpdateUserByIdAsync(ApplicationUser user)
         {
             var _user = await this._userManager.FindByIdAsync(user.Id.ToString());
             if(_user == null)
@@ -180,7 +190,12 @@ namespace SkillExchange.AccessService.Services
                 Email = user.Email,
                 UserName = user.Email,
                 LastName = user.LastName,
-                FirstName = user.FirstName
+                FirstName = user.FirstName,
+                Location = user.Location,
+                Description = user.Description,
+                Education = user.Education,
+                WorkExperience = user.WorkExperience,
+                PhotoId = user.PhotoId,
             };
             var updatedUser = await this._userManager.UpdateAsync(updateThisUser);
         
@@ -197,7 +212,12 @@ namespace SkillExchange.AccessService.Services
                 Id = user.Id,
                 Email = user.Email,
                 LastName = user.LastName,
-                FirstName = user.FirstName
+                FirstName = user.FirstName,
+                Location = user.Location,
+                Description = user.Description,
+                Education = user.Education,
+                WorkExperience = user.WorkExperience,
+                PhotoId = user.PhotoId
             };
             return new AuthenticationResult
             {

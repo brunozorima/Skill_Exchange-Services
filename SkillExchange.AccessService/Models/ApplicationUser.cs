@@ -30,5 +30,10 @@ namespace SkillExchange.AccessService.Models
         public bool PhoneNumberConfirmed { get; set; }
 
         public bool TwoFactorEnabled { get; set; }
+        public string Location { get; set; }
+        public string Description { get; set; }
+        public string Education { get; set; }
+        public string WorkExperience { get; set; }
+        public int PhotoId { get; set; }
     }
 }

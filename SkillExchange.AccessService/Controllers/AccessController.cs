@@ -99,7 +99,7 @@ namespace SkillExchange.AccessService.Controllers
 
         [HttpPut]
         [Route("/api/[controller]/updateUser")]
-        public async Task<IActionResult> UpdateUserById([FromBody] User user)
+        public async Task<IActionResult> UpdateUserById([FromBody] ApplicationUser user)
         {
             var result = await this._identityService.UpdateUserByIdAsync(user);
             if (!result.Success)

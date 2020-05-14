@@ -7,13 +7,17 @@ namespace SkillExchange.AccessService.Models
 {
     public enum Category
     {
-        Education,
-        Sport,
-        Music,
         Cooking,
-        Languages,
-        Health,
         Computing,
+        Consultant,
+        Creativity,
+        DIY,
+        Dance,
+        Education,
+        Health,
+        Languages,
+        Music,
+        Sport,
         Others       
     }
 }

@@ -133,7 +133,7 @@ namespace SkillExchange.AccessService.Controllers
             return BadRequest("Not Users Found!");
         }
         [HttpGet]
-        [Route("/api/[controller]/{person_id}/skills")]
+        [Route("/api/[controller]/{person_id}/users/match")]
         public async Task<IActionResult> ShowUsersWithMatchingSkillsAsync(int person_id, CancellationToken cancellationToken)
         {
             var result = await this._skillService.ShowUsersWithMatchingSkills(person_id, cancellationToken);
@@ -144,7 +144,7 @@ namespace SkillExchange.AccessService.Controllers
             return BadRequest("Not Users Found!");
         }
         [HttpGet]
-        [Route("/api/[controller]/{person_id}/skills/have")]
+        [Route("/api/[controller]/{person_id}/users/offering")]
         public async Task<IActionResult> ShowUsersWithSkillsHaveAsync(int person_id, CancellationToken cancellationToken)
         {
             var result = await this._skillService.ShowUsersWithSkillsHave(person_id, cancellationToken);
@@ -152,10 +152,10 @@ namespace SkillExchange.AccessService.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest("Not Users With the Skills you Have Found!");
+            return BadRequest("Not Users With the Skills you Seeking Found!");
         }
         [HttpGet]
-        [Route("/api/[controller]/{person_id}/skills/want")]
+        [Route("/api/[controller]/{person_id}/users/seeking")]
         public async Task<IActionResult> ShowUsersWithSkillsWantAsync(int person_id, CancellationToken cancellationToken)
         {
             var result = await this._skillService.ShowUsersWithSkillsWant(person_id, cancellationToken);
@@ -163,7 +163,7 @@ namespace SkillExchange.AccessService.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest("Not Users With the Skills you Want Found!");
+            return BadRequest("Not Users With the Skills you Offering Found!");
         }
     }
 }
